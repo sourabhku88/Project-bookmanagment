@@ -3,13 +3,13 @@ const bodyParser = require("body-parser");
 const route = require("./route/route");
 const mongoose = require("mongoose");
 const multer = require("multer");
-// const cors = require('cors');
+const cors = require('cors');
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer().any());
-// app.use(cors());
+app.use(cors());
 
 const url =
   "mongodb+srv://harsh-developer:aA12345678@cluster0.lxbes.mongodb.net/group22Database?retryWrites=true&w=majority";
