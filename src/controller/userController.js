@@ -80,7 +80,7 @@ const login = async (req, res) => {
         const token = jwt.sign({ _id: isUser._id }, "sourabhsubhamgauravhurshalltemsnameproject3", { expiresIn: "1d" });
         
         res.setHeader("x-api-key", token)    
-        return res.status(200).send({ status: true, message: "Login Successful", data: { token } });
+        return res.status(200).send({ status: true, message: "Login Successful", data: { token , isUser  } });
 
     } catch (error) { return res.status(500).send({ status: false, message: error.message }) }
 

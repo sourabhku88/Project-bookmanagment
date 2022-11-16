@@ -8,6 +8,11 @@ const reviewSchema = new mongoose.Schema({
         required: true,
         ref: 'Book'
     },
+    userId :{
+        type: ObjectId,
+        required: true,
+        ref: 'User'
+    },
     reviewedBy: {
         type: String,
         required: true,

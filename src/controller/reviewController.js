@@ -9,7 +9,7 @@ const {isValid ,regEx ,regEx1} = require('../validation/validation')
 //CREATE REVIEW
 const createReview = async function (req, res) {
     try {
-        let bookId = req.params.bookId
+        let bookId = req.params.bookId;
       
         if (Object.keys(req.body) == 0) return res.status(400).send({ status: false, message: 'Please! Provide data into body 😒' })
 
@@ -17,13 +17,17 @@ const createReview = async function (req, res) {
 
         if (!mongoose.isValidObjectId(bookId)) return res.status(400).send({ status: false, message: "Invalid book id." })
 
-        req.body.bookId = bookId
+        if (!mongoose.isValidObjectId(req.body.userId)) return res.status(400).send({ status: false, message: "Invalid user id." })
+
+        req.body.bookId = bookId;
 
         const findBookId = await bookModel.findOne({ _id: bookId, isDeleted: false })
 
         if (!findBookId) return res.status(404).send({ status: false, message: ' Book is not found' })
 
         if (!(req.body.review)) return res.status(400).send({ status: false, message: 'review can not be blank...' })
+
+        if (!(req.body.userId)) return res.status(400).send({ status: false, message: 'please provide userId' })
 
         if(req.body.review) {
             if(!regEx1.test(req.body.review))return res.status(400).send({status:false , message: 'review must be alphabet'})
@@ -38,10 +42,10 @@ const createReview = async function (req, res) {
          let updatebook=await bookModel.findOneAndUpdate({ _id: bookId, isDeleted: false }, { $inc: { reviews: 1 } }, { new: true })
       
         let saveData = await reviewsModel.create(req.body)
-        let {_id,reviewedBy,reviewedAt,rating,review,isDeleted}=saveData
+        let {_id,reviewedBy,reviewedAt,rating,review,isDeleted,userId}=saveData
 
 
-        let data = { _id,bookId:saveData.bookId,reviewedBy,reviewedAt,rating,review,isDeleted}
+        let data = { _id,bookId:saveData.bookId,reviewedBy,reviewedAt,rating,review,isDeleted,userId}
         res.status(201).send({ status: true, message: 'review created successfully',data:updatebook, review:[ data] })
 
     }
@@ -54,7 +58,7 @@ const updateReview = async (req,res)=>{
         const bookId = req.params.bookId;
         const reviewId = req.params.reviewId;
 
-        const { reviewedBy ,review ,rating} = req.body
+        const { reviewedBy ,review ,rating } = req.body
        
         if(!regEx.test(reviewedBy)) return res.status(400).send({ status: false, message: "reviewedBy text is invalid it must be alphabet " });
 
